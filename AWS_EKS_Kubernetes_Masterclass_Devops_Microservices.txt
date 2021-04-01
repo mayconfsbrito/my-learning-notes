@@ -1,0 +1,144 @@
+
+AWS EKS Kubernetes Masterclass DevOps Microservices
+
+1st Repo:
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass
+
+01-02-Create-EKSCluster-and-NodeGroups/
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/01-EKS-Create-Cluster-using-eksctl/01-02-Create-EKSCluster-and-NodeGroups
+1 - Create EKS cluster using eksctl
+	> eksctl create cluster ...
+2 - Create e associate IAM OIDC Provider for the EKS Cluster
+	> eksctl utils associate-iam-oidc-provider ...
+3 - Create a new keypair
+4 - Create a Node Group with Add-Ons in Public Subnets
+	> eksctl create nodegroup ...
+5 - Verify cluster and nodes
+6 - Update Worker Nodes security group to allow all traffic
+
+
+01-04-Delete-EKSCluster-and-NodeGroups
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/01-EKS-Create-Cluster-using-eksctl/01-04-Delete-EKSCluster-and-NodeGroups
+1 - Delete Node Group
+	> eksctl get clusters
+	> eksctl get nodegroup --cluster=<clusterName>
+	> eksctl delete nodegroup --cluster=<clusterName> --name <nodeGroupName>
+2 - Delete Cluster
+	> eksctl delete cluster <clusterName>
+
+
+Docker Fundamentals
+https://github.com/stacksimplify/docker-fundamentals
+
+
+Kubernetes Fundamentals
+https://github.com/stacksimplify/kubernetes-fundamentals
+02-PODs-with-kubectl
+1. Create Pod
+	> kubectl run my-first-pod --image stacksimplify/kubenginx:1.0.0
+2. List Pods with Wide option
+	> kubectl get pods -o wide
+3. Describe pod
+	> kubectl describe pod <Pod-Name>
+3. To access a pod externaly we need to create a NodePort Service
+	- Ports:
+		- port: Port on which node port service listens in Kubernetes cluster internally
+		- targetPort: We define container port here on which our application is running
+		- NodePort: Worker node port on which we can access our application
+	> kubectl expose pod <Pod-Name>  --type=NodePort --port=80 --name=<Service-Name>
+4. Get Public IP of Worker Nodes and how to access it
+	> kubectl get nodes -o wide
+	> http://<node1-public-ip>:<Node-Port>
+4. Verify pod logs
+	> kubectl get po
+	> kubectl logs <pod-name>
+5. Connect to Container in POD
+	> kubectl exec -it <pod-name> -- /bin/bash
+6. Get Pod or Service definition YAML output
+	> kubectl get pod my-first-pod -o yaml   
+	> kubectl get service my-first-service -o yaml   
+
+03-ReplicaSets-with-kubectl
+https://github.com/stacksimplify/kubernetes-fundamentals/tree/master/03-ReplicaSets-with-kubectl
+ReplicaSet
+	- Purpose: Maintain a stable set of replica Pods running at any given time
+	- If our application craches (any pods die)
+		- Replicaset will recreate the pod immediately to ensure the configured number of pods running at any given time
+	- Kubernetes provides pod load balancing out of the box using Services for the pods which are part of a ReplicaSet
+	- Labels & Selectors:
+		- Are the key items which ties all 3 together (Pod, ReplicaSet & Service)
+	- Scaling: Kubernetes enables us to easly scale up our application, adding additional pods as needed
+1. List ReplicaSets
+	> kubectl get replicaset
+	> kubectl get rs
+2. Expose ReplicaSet as a Service
+ 	> kubectl expose rs <ReplicaSet-Name>  --type=NodePort --port=80 --target-port=8080 --name=<Service-Name-To-Be-Created>
+3. Apply latest changes to ReplicaSet
+	> kubectl replace -f <File-Name>
+
+04-Deployments-with-kubectl/
+https://github.com/stacksimplify/kubernetes-fundamentals/tree/master/04-Deployments-with-kubectl
+Deployment
+	- Create a Deployment to rollout a ReplicaSet
+	- Deploytment -> ReplicaSet -> Pods
+1. Create Deployment
+	> kubectl create deployment <Deplyment-Name> --image=<Container-Image>
+2. Scaling a Deployment
+	> kubectl scale --replicas=20 deployment/<Deployment-Name>
+3. Expose Deployment as a Service
+	> kubectl expose deployment <Deployment-Name>  --type=NodePort --port=80 --target-port=80 --name=<Service-Name-To-Be-Created>
+4. Update image of a Deployment
+	> kubectl set image deployment/<Deployment-Name> <Container-Name>=<Container-Image> --record=true
+5. Verify Rollout Status
+	> kubectl rollout status deployment/my-first-deployment
+6. Describe Deployment (to verify and understand that K8s by default do "Rolling Update" for new application releases)
+	> kubectl describe deployment <Deployment-Name>
+7. Verify Rollout history of a Deployment
+	> kubectl rollout history deployment/<Deployment-Name>
+8. Edit Deployment
+	> kubectl edit deployment/<Deployment-Name> --record=true
+	- Change the yaml file
+9. Check the history and Verify changes in each version
+	> kubectl rollout history deployment/<Deployment-Name>
+	> kubectl rollout history deployment/<Deployment-Name> --revision=1
+10. Rollback a Deployment to previous version
+	> kubectl rollout undo deployment/<Deployment-Name>
+11. Rollback to specific revision
+	> kubectl rollout undo deployment/<Deployment-Name> --to-revision=3
+12. Pause Deployment
+	- If we need to do multiple changes in our deployment
+		- We can pause the the deployment and make all changes and resume it
+	> kubectl rollout pause deployment/<Deployment-Name>
+	- And make multiple changes, like these:
+		- Update the application version from V3 to V4
+			> kubectl set image deployment/<Deployment-Name> kubenginx=stacksimplify/kubenginx:4.0.0 --record=true
+		- Make one more change, changing resources for the Deployment
+			> kubectl set resources deployment/<Deployment-Name> -c=kubenginx --limits=cpu=200m,memory=512Mi
+13. After the pause and changes, Resume the Deployment
+	> kubectl rollout resume deployment/<Deployment-Name>
+
+05-Services-with-kubectl
+https://github.com/stacksimplify/kubernetes-fundamentals/tree/master/05-Services-with-kubectl
+- ClusterIP:
+	- Used for communication between applications inside k8s cluster
+	- ex: Frontend application accessing backend application
+- NodePort:
+	- Used for accessing applications outside of k8s cluster using Worker Node Ports
+	- ex: Accessing Frontend application on browser
+- LoadBalancer:
+	- Primarily for Cloud Providers to integrate with their Load Balancer services
+	- ex: AWS Elastic Load Balancer
+- Ingress:
+	- Ingress is an advanced load balancer which provides Context path based routing, SSL, SSL Redirect and many more
+	- ex: AWS ALB
+- externalName:
+	- To access externally hosted apps in kk8s cluster
+	- ex: Access AWS RDS Database endpoint by application present inside k9s cluster
+
+
+
+
+
+
+
+
