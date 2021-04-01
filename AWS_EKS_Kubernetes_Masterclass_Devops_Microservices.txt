@@ -55,8 +55,8 @@ https://github.com/stacksimplify/kubernetes-fundamentals
 5. Connect to Container in POD
 	> kubectl exec -it <pod-name> -- /bin/bash
 6. Get Pod or Service definition YAML output
-	> kubectl get pod my-first-pod -o yaml   
-	> kubectl get service my-first-service -o yaml   
+	> kubectl get pod my-first-pod -o yaml
+	> kubectl get service my-first-service -o yaml
 
 03-ReplicaSets-with-kubectl
 https://github.com/stacksimplify/kubernetes-fundamentals/tree/master/03-ReplicaSets-with-kubectl
@@ -134,9 +134,29 @@ https://github.com/stacksimplify/kubernetes-fundamentals/tree/master/05-Services
 - externalName:
 	- To access externally hosted apps in kk8s cluster
 	- ex: Access AWS RDS Database endpoint by application present inside k9s cluster
-
-
-
+- Example deploying a cluster and exposing Services
+	- One ClusterIP Service to expose the Backend App, letting the Frontend app to consume that
+	- One NodePort Service to expose de FrontendApp externally (to users)
+	1. Create Deployment
+		> kubectl create deployment my-backend-rest-app --image=stacksimplify/kube-helloworld:1.0.0
+	2. Create ClusterIP Service for Backend Rest App
+		> kubectl expose deployment my-backend-rest-app --port 8000 --target-port 8080 --name=my-backend-service
+	3. Create your own reverse proxy
+		- https://github.com/stacksimplify/kubernetes-fundamentals/tree/master/00-Docker-Images/03-kube-frontend-nginx
+	4. Create Deployment for Frontend Nginx Proxy
+		> kubectl create deployment my-frontend-nginx-app --image=stacksimplify/kube-frontend-nginx:1.0.0
+		> kubectl get deploy
+	5. Create ClusterIp Service for Frontend Nginx Proxy
+		> kubectl expose deployment my-frontend-nginx-app  --type=NodePort --port=80 --target-port=80 --name=my-frontend-service
+		> kubectl get svc
+	6. Capture IP and Port to Access Application
+		> kubectl get svc
+		> kubectl get nodes -o wide
+		> http://<node1-public-ip>:<Node-Port>/hello
+	7. Scale backend with 10 replicas
+		> kubectl scale --replicas=10 deployment/my-backend-rest-app
+	8. Test again to view the backend service Load Balancing
+		> http://<node1-public-ip>:<Node-Port>/hello
 
 
 
