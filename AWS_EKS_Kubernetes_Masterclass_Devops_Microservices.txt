@@ -146,7 +146,7 @@ https://github.com/stacksimplify/kubernetes-fundamentals/tree/master/05-Services
 	4. Create Deployment for Frontend Nginx Proxy
 		> kubectl create deployment my-frontend-nginx-app --image=stacksimplify/kube-frontend-nginx:1.0.0
 		> kubectl get deploy
-	5. Create ClusterIp Service for Frontend Nginx Proxy
+	5. Create NodePort Service for Frontend Nginx Proxy
 		> kubectl expose deployment my-frontend-nginx-app  --type=NodePort --port=80 --target-port=80 --name=my-frontend-service
 		> kubectl get svc
 	6. Capture IP and Port to Access Application
@@ -158,7 +158,53 @@ https://github.com/stacksimplify/kubernetes-fundamentals/tree/master/05-Services
 	8. Test again to view the backend service Load Balancing
 		> http://<node1-public-ip>:<Node-Port>/hello
 
+aws-eks-kubernetes-masterclass (AGAIN)
+04-EKS-Storage-with-EBS-ElasticBlockStore
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/04-EKS-Storage-with-EBS-ElasticBlockStore
+04-01-Install-EBS-CSI-Driver/
+1. Create IAM policy
+2. Get the IAM role worker nodes using and associate this policy to that role
+	> kubectl -n kube-system describe configmap aws-auth
+	- from output check rolearn
+	- Go to Services > IAM > Roles > Search for the returned role and open it
+		- Click in Permissions > Attach policies > Search and attach the create
+		policy in the step 1
+5. Deploy the Amazon EBS CSI Driver
+	- Check if the k8s version it's greather than 1.14
+		> kubectl version --client --short
+	- Deploy EBS CSI Driver
+		> kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
+	- Verify ebs-csi pods running
+		> kubectl get pods -n kube-system
 
+04-02-SC-PVC-ConfigMap-MySQL
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/04-EKS-Storage-with-EBS-ElasticBlockStore/04-02-SC-PVC-ConfigMap-MySQL
+* Create a MySQL Database with persistence storage using AWS EBS Volumes
+1. Create Storage Class & PVC
+	> kubectl apply -f kube-manifests/
+	- Get the files on kube-manifests folder on the link above
+	- Check these files to understand better about this workload
+2. List Storage Classes
+	> kubectl get sc
+3. List PVC
+	> kubectl get pvc
+4. List PV
+	> kubectl get pv
+5. Connect to MySQL Database (Test)
+	> kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h mysql -pdbpassword11
+	> show schemas;
 
-
-
+04-03-UserManagement-MicroService-with-MySQLDB
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/04-EKS-Storage-with-EBS-ElasticBlockStore/04-03-UserManagement-MicroService-with-MySQLDB
+1. Create user management rvice deployment and service
+2. Create Deployment & NodePort Service
+	> kubectl apply -f kube-manifests/
+3. List Pods
+	> kubectl get pods
+4. Verify logs of Usermgmt Microservice pod
+	> kubectl logs -f <Pod-Name>
+5. Verify sc, pvc, pv
+	> kubectl get sc,pvc,pv
+- Problem observation:
+	- Pod will be restarting multiple times due to unavailability of Database
+	- To avoid this, we can apply initContainer concept to our Deployment manifest
