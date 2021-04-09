@@ -255,3 +255,35 @@ https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/06-E
 - Create mysql externalName Service
 - Connect to RDS database using kubectl
 	> kubectl run -it --rm --image=mysql:5.7.22 --restart=Never mysql-client -- mysql -h usermgmtdb.c7hldelt9xfp.us-east-1.rds.amazonaws.com -u dbadmin -pdbpassword11
+
+07-ELB-Classic-and-Network-LoadBalancers
+07-01-Create-EKS-Private-NodeGroup
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/07-ELB-Classic-and-Network-LoadBalancers/07-01-Create-EKS-Private-NodeGroup
+- Create Private Node Group in a Cluster
+- Key option for the command is --node-private-networking
+	> eksctl create nodegroup --cluster=eksdemo1 \
+                        --region=us-east-1 \
+                        --name=eksdemo1-ng-private1 \
+                        --node-type=t3.medium \
+                        --nodes-min=2 \
+                        --nodes-max=4 \
+                        --node-volume-size=20 \
+                        --ssh-access \
+                        --ssh-public-key=kube-demo \
+                        --managed \
+                        --asg-access \
+                        --external-dns-access \
+                        --full-ecr-access \
+                        --appmesh-access \
+                        --alb-ingress-access \
+                        --node-private-networking
+- Subnet Route Table Verification - Outbound Traffic goes via NAT Gateway
+	- Verify the node group subnet routes to ensure it created in private subnets
+	- Go to Services -> EKS -> eksdemo -> eksdemo1-ng1-private
+	- Click on Associated subnet in Details tab
+	- Click on Route Table Tab.
+	- We should see that internet route via NAT Gateway (0.0.0.0/0 -> nat-xxxxxxxx)
+
+07-03-Network-LoadBalancer-NLB
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/07-ELB-Classic-and-Network-LoadBalancers/07-03-Network-LoadBalancer-NLB
+
