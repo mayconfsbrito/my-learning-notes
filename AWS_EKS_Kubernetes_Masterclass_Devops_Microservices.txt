@@ -208,3 +208,50 @@ https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/04-E
 - Problem observation:
 	- Pod will be restarting multiple times due to unavailability of Database
 	- To avoid this, we can apply initContainer concept to our Deployment manifest
+
+05-Kubernetes-Important-Concepts-for-Application-Deployments
+05-02-Kubernetes-Init-Containers
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/05-Kubernetes-Important-Concepts-for-Application-Deployments/05-02-Kubernetes-Init-Containers
+- Init Containers run before App Containers
+- Init Containers can contain utilities or setup scripts not present in an app image
+- We can have and run multiple Init Containers before App Container
+- Init containers are exactly like regular containers, except:
+	- Init containers always run to completion
+	- Each init container must complete successfully before the next one starts
+- If a Pod's init container fails, K8s repeatedly restarts the Pod until the init container succeds
+- However, if the Pod has a restartPolicy of Never, Kubernetes does not restart the Pod
+
+05-03-Kubernetes-Liveness-and-Readiness-Probes
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/05-Kubernetes-Important-Concepts-for-Application-Deployments/05-03-Kubernetes-Liveness-and-Readiness-Probes
+
+05-04-Kubernetes-Requests-Limits
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/05-Kubernetes-Important-Concepts-for-Application-Deployments/05-04-Kubernetes-Requests-Limits
+- Kubelet reserves at least the request amount of the system resource specifically for that container to user
+- List Pods screens
+	> kubectl get pods -w
+
+05-05-Kubernetes-Namespaces
+05-05-02-Namespaces-LimitRange-default
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/05-Kubernetes-Important-Concepts-for-Application-Deployments/05-05-Kubernetes-Namespaces/05-05-02-Namespaces-LimitRange-default
+- Important note: File name starts with 00- so that when creating k8s objects namespaces will get created first
+- Instead of specifying resources like cpu and memory in every container spec o a pod definition,
+	- we can provide the default CPU & Memory for all containers in a namespace using Limit Range
+	- Kind: ResourceQuota
+- Get & Describe Limits
+	> kubectl get limits -n dev3
+	> kubectl describe limits default-cpu-mem-limit-range -n dev3
+
+05-05-03-Namespaces-ResourceQuota
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/05-Kubernetes-Important-Concepts-for-Application-Deployments/05-05-Kubernetes-Namespaces/05-05-03-Namespaces-ResourceQuota
+- Get & Describe Limits
+	> kubectl get limits -n dev3
+	> kubectl describe limits default-cpu-mem-limit-range -n dev3
+- Get Resource Quota
+	> kubectl get quota -n dev3
+	> kubectl describe quota ns-resource-quota -n dev3
+
+06-EKS-Storage-with-RDS-Database
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/06-EKS-Storage-with-RDS-Database
+- Create mysql externalName Service
+- Connect to RDS database using kubectl
+	> kubectl run -it --rm --image=mysql:5.7.22 --restart=Never mysql-client -- mysql -h usermgmtdb.c7hldelt9xfp.us-east-1.rds.amazonaws.com -u dbadmin -pdbpassword11
