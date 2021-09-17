@@ -287,3 +287,35 @@ https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/07-E
 07-03-Network-LoadBalancer-NLB
 https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/07-ELB-Classic-and-Network-LoadBalancers/07-03-Network-LoadBalancer-NLB
 
+08-ELB-Application-LoadBalancers
+08-02-ALB-Ingress-Basics
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/08-ELB-Application-LoadBalancers/08-02-ALB-Ingress-Basics
+- Verify ALB Ingress Controller logs
+	> kubectl logs -f $(kubectl get po -n kube-system | egrep -o 'alb-ingress-controller-[A-Za-z0-9-]+') -n kube-system
+
+
+09-EKS-Workloads-on-Fargate
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/09-EKS-Workloads-on-Fargate
+- Fargate considerations
+	- https://docs.aws.amazon.com/eks/latest/userguide/fargate.html
+
+
+12-Microservices-Deployment-on-EKS/
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/12-Microservices-Deployment-on-EKS
+- List logs from a pod using regex to filter names
+	> kubectl logs -f $(kubectl get po | egrep -o 'usermgmt-microservice-[A-Za-z0-9-]+')
+
+13-Microservices-Distributed-Tracing-using-AWS-XRay-on-EKS
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/13-Microservices-Distributed-Tracing-using-AWS-XRay-on-EKS
+
+14-Microservices-Canary-Deployments
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/14-Microservices-Canary-Deployments
+
+16-EKS-VPA-Vertical-Pod-Autoscaler
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/16-EKS-VPA-Vertical-Pod-Autoscaler
+
+17-EKS-Autoscaling-Cluster-Autoscaler
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/17-EKS-Autoscaling-Cluster-Autoscaler
+
+18-EKS-Monitoring-using-CloudWatch-Container-Insights
+https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/18-EKS-Monitoring-using-CloudWatch-Container-Insights
