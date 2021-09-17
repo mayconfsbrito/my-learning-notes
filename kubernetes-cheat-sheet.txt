@@ -1,0 +1,12 @@
+
+
+****************** AWS EKS ******************
+
+# show the current eks cluster
+kubectl config current-context
+
+# update the context or the used cluster from EKS by kubectl
+aws eks update-kubeconfig --name CLUSTER_NAME
+
+# list the clusters from eks
+aws eks list-clusters
