@@ -1,12 +1,25 @@
-
-
-****************** AWS EKS ******************
+****************** KUBECTL CONTEXTS ******************
 
 # show the current eks cluster
 kubectl config current-context
+
+# switch context
+kubect config use-context CONTEXT_NAME
+
+
+****************** AWS EKS ******************
 
 # update the context or the used cluster from EKS by kubectl
 aws eks update-kubeconfig --name CLUSTER_NAME
 
 # list the clusters from eks
 aws eks list-clusters
+
+
+****************** KinD ******************
+
+# create a cluster using an YAML file
+kind create cluster --name wslkindmultinodes --config ./kind-3nodes.yaml
+
+# delete a cluster by names
+kind delete cluster --name wslkind
