@@ -1,3 +1,9 @@
+Kubernetes cheatsheet
+https://kubernetes.io/pt-br/docs/reference/kubectl/cheatsheet/
+
+Kubernetes short-names
+https://blog.heptio.com/kubectl-resource-short-names-heptioprotip-c8eff9fb7202
+
 ****************** KUBECTL CONTEXTS ******************
 
 # show the current eks cluster
@@ -23,3 +29,49 @@ kind create cluster --name wslkindmultinodes --config ./kind-3nodes.yaml
 
 # delete a cluster by names
 kind delete cluster --name wslkind
+
+
+****************** Taint ******************
+
+# Remove taint of all nodes
+kubectl taint nodes --all node-role.kubernetes.io/master-
+
+
+****************** YAML ******************
+
+# Generate an YAML code of a nonexisting deployment (using --dry-run).
+# The object won't be created
+kubectl create deployment two --image=nginx --dry-run=client -o yaml
+
+# Show an YAML output of an existing deployment
+kubectl get deployment NAME -o yaml
+
+# Generate the YAML file of the newsly created objects
+kubectl get deployments,rs,pods -o yaml
+
+
+****************** Deployment ******************
+
+# Create a simple deployment for nginx image
+kubectl create deployment NAME --image nginx
+
+
+****************** Pods ******************
+
+# Remove failed or evicted pods
+kubectl delete pod --field-selector="status.phase==Failed"
+
+# Print environment vars from a pod
+kubectl exec nginx-7848d4b86f-5f6q5 -- printenv
+
+
+****************** Rollout ******************
+
+# Check/Describe a revision of a Rollout
+kubectl rollout history ds ds-one --revision=2
+
+
+****************** ConfigMaps ******************
+
+# Create a configmap from literal, a single file, or many files within a directory
+kubectl create configmap NAME --from-literal=KEY=VALUE --from-file=./FILE_NAME --from-file=./DIR_NAME/
