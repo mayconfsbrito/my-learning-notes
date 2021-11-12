@@ -82,3 +82,6 @@ kubectl create configmap NAME --from-literal=KEY=VALUE --from-file=./FILE_NAME -
 
 # Apply label to node
 kubectl label node NODE_NAME KEY=VALUE
+
+# Remove label from node (minus to remove the desired label by key)
+kubectl label node NODE_NAME KEY-
