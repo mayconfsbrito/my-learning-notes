@@ -62,7 +62,8 @@ kubectl create deployment NAME --image nginx
 kubectl delete pod --field-selector="status.phase==Failed"
 
 # Print environment vars from a pod
-kubectl exec nginx-7848d4b86f-5f6q5 -- printenv
+kubectl exec POD_NAME -- printenv
+kubectl exec POD_NAME -- /bin/bash -c 'echo $VARIABLE'
 
 
 ****************** Rollout ******************
@@ -75,3 +76,9 @@ kubectl rollout history ds ds-one --revision=2
 
 # Create a configmap from literal, a single file, or many files within a directory
 kubectl create configmap NAME --from-literal=KEY=VALUE --from-file=./FILE_NAME --from-file=./DIR_NAME/
+
+
+****************** Labels ******************
+
+# Apply label to node
+kubectl label node NODE_NAME KEY=VALUE
