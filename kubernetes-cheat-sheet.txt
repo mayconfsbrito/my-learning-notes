@@ -21,6 +21,8 @@ aws eks update-kubeconfig --name CLUSTER_NAME
 # list the clusters from eks
 aws eks list-clusters
 
+# connect to an existing EKS cluster
+aws eks --region region update-kubeconfig --name cluster_name
 
 ****************** KinD ******************
 
