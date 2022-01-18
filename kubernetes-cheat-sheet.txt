@@ -80,6 +80,11 @@ kubectl rollout history ds ds-one --revision=2
 kubectl create configmap NAME --from-literal=KEY=VALUE --from-file=./FILE_NAME --from-file=./DIR_NAME/
 
 
+****************** ConfigMaps ******************
+
+# Get secret decoded data value | kubectl describe secret shows the decoded value as well
+kubectl get secret kubernetes-dashboard-token-w9m4j --template={{.data.KEY_NAME}} | base64 --decode
+
 ****************** Labels ******************
 
 # Apply label to node
@@ -87,3 +92,11 @@ kubectl label node NODE_NAME KEY=VALUE
 
 # Remove label from node (minus to remove the desired label by key)
 kubectl label node NODE_NAME KEY-
+
+****************** Monitoring ******************
+
+# List resources used by the pods of this namespace
+kubectl top pod
+
+# Show used resources by node
+kubectl top nodes
