@@ -100,3 +100,27 @@ kubectl top pod
 
 # Show used resources by node
 kubectl top nodes
+
+
+****************** CURL ******************
+
+# run a container inside the cluster to curl other services or pods
+kubectl run curl --image=radial/busyboxplus:curl -i --tty
+nslookup NAME_POD_OR_SERVICE
+curl DNS_OR_IP
+
+
+****************** ETCD ******************
+
+# Check the healthy of the database
+kubectl exec -ti etcd-<NODE_NAME> -n kube-system -- sh -c "ETCDCTL_API=3 ETCDCTL_CACERT=/etc/kubernetes/pki/etcd/ca.crt ETCDCTL_CERT=/etc/kubernetes/pki/etcd/server.crt ETCDCTL_KEY=/etc/kubernetes/pki/etcd/server.key etcdctl endpoint health"
+
+# Check how many databases are part of the cluster
+kubectl exec -ti etcd-<NODE_NAME> -n kube-system -- sh -c "ETCDCTL_API=3 ETCDCTL_CACERT=/etc/kubernetes/pki/etcd/ca.crt ETCDCTL_CERT=/etc/kubernetes/pki/etcd/server.crt ETCDCTL_KEY=/etc/kubernetes/pki/etcd/server.key etcdctl --endpoints=https://127.0.0.1:2379 member list -w table"
+
+# Backup the etcd database and check the resulting snapshot.db
+kubectl exec -ti etcd-<NODE_NAME> -n kube-system -- sh -c "ETCDCTL_API=3 ETCDCTL_CACERT=/etc/kubernetes/pki/etcd/ca.crt ETCDCTL_CERT=/etc/kubernetes/pki/etcd/server.crt ETCDCTL_KEY=/etc/kubernetes/pki/etcd/server.key etcdctl --endpoints=https://127.0.0.1:2379 snapshot save /var/lib/etcd/snapshot.db"
+sudo ls -l /var/lib/etcd
+
+# Restore the etcd cluster
+kubectl exec -ti etcd-<NODE_NAME> -n kube-system -- sh -c "ETCDCTL_API=3 ETCDCTL_CACERT=/etc/kubernetes/pki/etcd/ca.crt ETCDCTL_CERT=/etc/kubernetes/pki/etcd/server.crt ETCDCTL_KEY=/etc/kubernetes/pki/etcd/server.key etcdctl --endpoints=https://127.0.0.1:2379 snapshot restore /var/lib/etcd/snapshot.db"
