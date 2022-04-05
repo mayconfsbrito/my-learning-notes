@@ -44,6 +44,9 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 # Generate an YAML code of a nonexisting deployment (using --dry-run).
 # The object won't be created
 kubectl create deployment two --image=nginx --dry-run=client -o yaml
+or
+kubectl create deployment two --image=nginx --dry-run=client -o yaml > deployment.yaml
+
 
 # Show an YAML output of an existing deployment
 kubectl get deployment NAME -o yaml
@@ -80,10 +83,14 @@ kubectl rollout history ds ds-one --revision=2
 kubectl create configmap NAME --from-literal=KEY=VALUE --from-file=./FILE_NAME --from-file=./DIR_NAME/
 
 
-****************** ConfigMaps ******************
+****************** Secrets ******************
+
+# Create secrets quickly from literal data
+kubectl create secret opaque secret-name --from-literal=KEY_NAME1=value1 --from-literal=KEY_NAME2=value2
 
 # Get secret decoded data value | kubectl describe secret shows the decoded value as well
 kubectl get secret kubernetes-dashboard-token-w9m4j --template={{.data.KEY_NAME}} | base64 --decode
+
 
 ****************** Labels ******************
 

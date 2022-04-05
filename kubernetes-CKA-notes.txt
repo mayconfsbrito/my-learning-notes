@@ -1,0 +1,17 @@
+
+
+--dry-run=client
+Use this command to if the command will run
+Use it as well to create YAML files from create command (without creating the resource)
+
+
+kubectl create - replicas
+This command doesn't have --replicasd
+Generate an yaml file and modify it
+kubectl create deploy nginx-deploy --dry-run=client --image=nginx --dry-run -o yaml > nginx-deployment.yaml
+
+
+UPGRADING NODE
+kubectl drain node
+perform the required tasks
+kubectl uncordon node
